@@ -63,9 +63,8 @@ async def evaluation(
         else:
             news = session.exec(select(News)).all()
 
-    total_pages = (
-        (len(news) // 12) if len(news) % 12 == 0 else (len(news) // 12) + 1
-    )
+    full_pages, extra = divmod(len(news), 12)
+    total_pages = full_pages + bool(extra)
 
     if page == total_pages:
         return create_response(
