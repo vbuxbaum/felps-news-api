@@ -67,14 +67,14 @@ async def evaluation(
         (len(news) // 12) if len(news) % 12 == 0 else (len(news) // 12) + 1
     )
 
-    if int(page) == total_pages:
+    if page == total_pages:
         return create_response(
-            news[12 * (int(page) - 1):], category, page, total_pages
+            news[12 * (page - 1):], category, page, total_pages
         )
 
-    if 0 < int(page) < total_pages:
+    if page < total_pages:
         return create_response(
-            news[12 * (int(page) - 1): 12 * (int(page))],
+            news[12 * (page - 1): 12 * page],
             category,
             page,
             total_pages,
