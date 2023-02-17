@@ -22,7 +22,9 @@ def get_session():
     return Session(engine)
 
 
-def create_response(news: list, category_filter: str, current_page: int, total_pages: int):
+def create_response(
+    news: list, category_filter: str, current_page: int, total_pages: int
+):
     return {
         "total_pages": total_pages,
         "current_page": current_page,
@@ -53,19 +55,26 @@ async def health():
 async def evaluation(category: str | None = None, page: int = 1):
     with get_session() as session:
         if category:
-            news = session.exec(select(News).where(News.category == category.lower())).all()
+            news = session.exec(
+                select(News).where(News.category == category.lower())
+            ).all()
         else:
             news = session.exec(select(News)).all()
 
-    total_pages = (len(news) // 12) if len(news) % 12 == 0 else (len(news) // 12) + 1
+    total_pages = (
+        (len(news) // 12) if len(news) % 12 == 0 else (len(news) // 12) + 1
+    )
 
     if int(page) == total_pages:
         return create_response(
-            news[12 * (int(page) - 1) :], category, page, total_pages
+            news[12 * (int(page) - 1):], category, page, total_pages
         )
     elif 0 < int(page) < total_pages:
         return create_response(
-            news[12 * (int(page) - 1) : 12 * (int(page))], category, page, total_pages
+            news[12 * (int(page) - 1): 12 * (int(page))],
+            category,
+            page,
+            total_pages,
         )
     else:
         raise HTTPException(
