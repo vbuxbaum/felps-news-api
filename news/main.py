@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from news.db import create_db_and_table, engine, populate_table, is_table_empty
 from news.model import News
@@ -52,7 +52,9 @@ async def health():
 
 
 @app.get("/get_news")
-async def evaluation(category: str | None = None, page: int = 1):
+async def evaluation(
+    category: str | None = None, page: int = Query(default=1, gt=0)
+):
     with get_session() as session:
         if category:
             news = session.exec(
@@ -79,5 +81,6 @@ async def evaluation(category: str | None = None, page: int = 1):
         )
 
     raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND, detail="page does not exist"
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"page {page} does not exist",
     )
