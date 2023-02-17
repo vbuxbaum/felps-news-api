@@ -46,7 +46,7 @@ async def home():
 
 @app.get("/health")
 async def health():
-    return {"status": "healthy as a horse"}
+    return {"status": "healthy as a healthy horse"}
 
 
 @app.get("/get_news")
