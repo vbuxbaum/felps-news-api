@@ -69,14 +69,15 @@ async def evaluation(category: str | None = None, page: int = 1):
         return create_response(
             news[12 * (int(page) - 1):], category, page, total_pages
         )
-    elif 0 < int(page) < total_pages:
+
+    if 0 < int(page) < total_pages:
         return create_response(
             news[12 * (int(page) - 1): 12 * (int(page))],
             category,
             page,
             total_pages,
         )
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="page does not exist"
-        )
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="page does not exist"
+    )
